@@ -1,0 +1,37 @@
+FROM ubuntu:17.10
+
+RUN apt-get update && \
+    apt-get -y install software-properties-common apt-transport-https && \
+    add-apt-repository -y "deb https://cloud.r-project.org/bin/linux/ubuntu artful/" && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9 && \
+    apt-get update && \
+    apt-get install -y lua5.1 kwstyle swig r-base r-base-dev python2.7-dev python-pip git && \
+    pip install cmake
+
+RUN apt-get install -y graphviz doxygen
+
+RUN git clone https://github.com/SimpleITK/SimpleITK.git &&\
+     cd SimpleITK &&\
+     git checkout next
+
+RUN mkdir bld && cd bld &&\
+    cmake \
+    -DBUILD_DOCUMENTATION:BOOL=OFF \
+    -DBUILD_EXAMPLES:BOOL=OFF \
+    -DSHARED_LIBS:BOOL=ON \
+    -DSimpleITK_USE_SYSTEM_LUA:BOOL=ON \
+    -DSimpleITK_USE_SYSTEM_SWIG:BOOL=ON \
+    -DSimpleITK_EXPLICIT_INSTANTIATION:BOOL=OFF \
+    -DWRAP_DEFAULT:BOOL=OFF \
+    -DWRAP_R:BOOL=ON \
+    -DBUILD_DOXYGEN:BOOL=ON \
+    -DBUILD_DOCUMENTS:BOOL=ON \
+    ../SimpleITK/SuperBuild
+
+RUN cd bld &&\
+    export LD_LIBRARY_PATH=/bld/ITK-prefix/lib:/bld/SimpleITK-bld/lib &&\
+    make -j $(nproc) Documentation
+
+#ENTRYPOINT cd bld/SimpleITK-build && ctest -j $(nproc)
+
+
