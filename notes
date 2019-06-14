@@ -1,0 +1,59 @@
+Singularity on the laptop
+
+1 Dependencies as per
+
+https://www.sylabs.io/guides/3.2/user-guide/quick_start.html#quick-installation-steps
+
+
+sudo apt-get update && sudo apt-get install -y \
+    build-essential \
+    libssl-dev \
+    uuid-dev \
+    libgpgme11-dev \
+    squashfs-tools \
+    libseccomp-dev \
+    wget \
+    pkg-config \
+    git
+
+2) Go - install into /usr/local/
+
+wget https://dl.google.com/go/go1.12.6.linux-amd64.tar.gz
+
+sudo tar -C /usr/local/ -xzf go1.12.6.linux-amd64.tar.gz
+
+export GOPATH=${HOME}/go
+export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin
+
+3) Fetch singularity
+
+export VERSION=3.2.1 && # adjust this as necessary \
+    wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-${VERSION}.tar.gz && \
+    tar -xzf singularity-${VERSION}.tar.gz && \
+    cd singularity
+
+ ./mconfig && \
+    make -C builddir && \
+    sudo make -C builddir install
+
+
+#####################
+
+## Start with an old ubuntu
+
+sudo singularity build --sandbox fake ubuntu_fake_ct.def
+
+## installer runs for longer than on work systems. Needs to be root to install
+## somewhere central
+sudo singularity shell --bind /home/richardb/Projects/mydockerz/PetStuff:/mnt --writable fake
+
+## The instructions with this package are possibly the worst I've ever seen. We've recieved a
+## deployed version. I think we need to create a mat file with the configuration, and doing so requires matlab
+## Easiest to do on the same OS.
+## Paths that get saved need to match the eventual install location
+
+## The LD_LIBRARY_PATH needs to include that location, so edit the run_Pseudo_CT_executable_for_linux_64bits.sh to include it, otherwise it is necessary to run from the install folder
+
+## Need to run the container something like this
+
+singularity shell --bind /tmp/PET:/PET /pathtofreesurferlincense.txt:/opt/freesurfer/license.txt
