@@ -56,4 +56,4 @@ sudo singularity shell --bind /home/richardb/Projects/mydockerz/PetStuff:/mnt --
 
 ## Need to run the container something like this
 
-singularity shell --bind /tmp/PET:/PET /pathtofreesurferlincense.txt:/opt/freesurfer/license.txt
+singularity shell --bind /tmp/PET:/PET,/home/richardb/Projects/mydockerz/license.txt:/opt/freesurfer/license.txt fake
