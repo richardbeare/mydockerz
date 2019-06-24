@@ -1,0 +1,12 @@
+Bootstrap: library
+From: ubuntu:18.04
+
+%post
+	apt-get update
+	apt install -y unzip bc build-essential curl git python-dev software-properties-common
+	add-apt-repository universe
+	add-apt-repository restricted
+	add-apt-repository multiverse
+	apt update
+	apt install -y  libwxgtk3.0-dev python-wxgtk3.0 python-pexpect python-paramiko python-pycryptopp python-appdirs python-requests python-pip appmenu-gtk-module-common sudo
+	pip install --force-reinstall --no-binary :all: pyinstaller

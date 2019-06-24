@@ -57,3 +57,13 @@ sudo singularity shell --bind /home/richardb/Projects/mydockerz/PetStuff:/mnt --
 ## Need to run the container something like this
 
 singularity shell --bind /tmp/PET:/PET /pathtofreesurferlincense.txt:/opt/freesurfer/license.txt
+
+
+#######################################
+## For building strudel
+##############################
+
+sudo singularity build --sandbox strudel ubuntu_bionic_strudel.def
+
+# Run the first part of strudel creation, before all the sudo stuff, inside
+the container, and the rest outside.
